@@ -1,0 +1,44 @@
+
+spring:
+  profiles:
+    active: development
+
+---
+
+spring:
+  profiles: development
+  #h2:默认使用spring自带的h2数据库,控制台默认打开,通过ip:端口+/h2-console/访问
+  #使用默认配置,JDBCURL用户名密码使用datasource中数据
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    hibernate:
+    #重启服务器只在当前基础上更新而不抛弃原有数据库
+      ddl-auto: create-drop
+    show-sql: true
+  datasource:
+    url: jdbc:h2:file:~/.h2/mycourses
+    username: mycourses2019
+    password: mycourses2019
+  servlet:
+    multipart:
+      max-file-size: 5MB
+  mail:
+    host: smtp.163.com
+    username: mycourses2019@163.com
+    password: mycourses2019
+    properties:
+      smtp:
+        auth: true
+        timeout: 25000
+
+server:
+  #服务器端口使用8080,spring自带的tomcat编码选择utf8
+  port: 4080
+  tomcat.uri-encoding: UTF-8
+---
+spring:
+  profiles: production
