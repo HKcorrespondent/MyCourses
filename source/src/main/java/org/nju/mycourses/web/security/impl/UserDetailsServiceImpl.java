@@ -1,6 +1,6 @@
 package org.nju.mycourses.web.security.impl;
 
-import org.nju.mycourses.data.User;
+import org.nju.mycourses.data.entity.User;
 import org.nju.mycourses.data.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;

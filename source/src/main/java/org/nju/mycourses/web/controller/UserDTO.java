@@ -3,7 +3,6 @@ package org.nju.mycourses.web.controller;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.nju.mycourses.data.Role;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

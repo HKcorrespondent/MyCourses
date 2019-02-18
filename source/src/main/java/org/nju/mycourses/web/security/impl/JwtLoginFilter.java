@@ -5,8 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.activemq.command.DataResponse;
-import org.nju.mycourses.data.User;
+import org.nju.mycourses.data.entity.User;
 import org.nju.mycourses.data.UserDAO;
 import org.nju.mycourses.logic.exception.NotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +15,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;

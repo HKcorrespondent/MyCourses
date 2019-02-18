@@ -1,7 +1,5 @@
 package org.nju.mycourses.web.security.impl;
 
-import org.nju.mycourses.data.User;
-
 import java.util.HashMap;
 import java.util.Map;
 

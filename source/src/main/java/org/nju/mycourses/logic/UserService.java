@@ -1,10 +1,8 @@
 package org.nju.mycourses.logic;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.nju.mycourses.data.Role;
-import org.nju.mycourses.data.State;
-import org.nju.mycourses.data.User;
-import org.nju.mycourses.data.UserDAO;
+import org.nju.mycourses.data.*;
+import org.nju.mycourses.data.entity.*;
 import org.nju.mycourses.logic.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +14,15 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserDAO userDAO;
+    private final StudentDAO studentDAO;
+    private final TeacherDAO teacherDAO;
     private final EmailService emailService;
     @Autowired
-    public UserService(UserDAO userDAO, EmailService emailService) {
+    public UserService(UserDAO userDAO, EmailService emailService, StudentDAO studentDAO, TeacherDAO teacherDAO) {
         this.userDAO = userDAO;
         this.emailService = emailService;
+        this.studentDAO = studentDAO;
+        this.teacherDAO = teacherDAO;
     }
     @Transactional
     public Optional<User> Register(String email, String password, Role role){
@@ -37,6 +39,17 @@ public class UserService {
         newUser.setCERTIFIED_CODE(certifiedCode);
         emailService.send(email,"欢迎注册myCourses平台!","您的验证码是:"+certifiedCode);
         final User user = userDAO.save(newUser);
+        if(role.equals(Role.STUDENT)){
+            Student student=new Student();
+            student.setUsername(email);
+            student.setUser(user);
+            studentDAO.save(student);
+        }else if(role.equals(Role.TEACHER)){
+            Teacher teacher=new Teacher();
+            teacher.setUsername(email);
+            teacher.setUser(user);
+            teacherDAO.save(teacher);
+        }
         return Optional.of(user);
     }
 

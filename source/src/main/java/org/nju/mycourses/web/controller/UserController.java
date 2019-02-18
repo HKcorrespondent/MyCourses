@@ -1,9 +1,7 @@
 package org.nju.mycourses.web.controller;
 
-import org.apache.activemq.command.DataResponse;
 import org.hibernate.service.spi.ServiceException;
-import org.nju.mycourses.data.Role;
-import org.nju.mycourses.data.User;
+import org.nju.mycourses.data.entity.Role;
 import org.nju.mycourses.logic.UserService;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
@@ -18,23 +16,21 @@ import javax.annotation.security.RolesAllowed;
 import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static org.nju.mycourses.web.security.WebSecurityConstants.*;
 @RestController
 @RequestMapping(value="/api")
-public class StudentController {
+public class UserController {
     private final EmailService emailService;
     private final UserService userService;
     @Autowired
-    public StudentController(EmailService emailService, UserService userService) {
+    public UserController(EmailService emailService, UserService userService) {
         this.emailService = emailService;
         this.userService = userService;
     }
 
     @RequestMapping(value="/student/register",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public UserVO register(@RequestBody @Validated(PostMapping.class) UserDTO userDTO, Errors errors) throws ServiceException {
-        System.out.println("userDTO:"+userDTO);
+    public UserVO registerStudent(@RequestBody @Validated(PostMapping.class) UserDTO userDTO, Errors errors) throws ServiceException {
         if (errors.hasGlobalErrors()) {
             throw new ExceptionNotValid(errors.getGlobalError().getDefaultMessage());
         }
@@ -46,10 +42,23 @@ public class StudentController {
                         userDTO.getUsername(),userDTO.getPassword(),Role.STUDENT
                 ).orElseThrow(() -> new ExceptionNotValid("该账户已注册"))
                );
-
     }
-    @RolesAllowed({UNCERTIFIED_STUDENT_ROLE})
-    @RequestMapping(value="/student/mail/validate",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    @RequestMapping(value="/teacher/register",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public UserVO registerTeacher(@RequestBody @Validated(PostMapping.class) UserDTO userDTO, Errors errors) throws ServiceException {
+        if (errors.hasGlobalErrors()) {
+            throw new ExceptionNotValid(errors.getGlobalError().getDefaultMessage());
+        }
+        if (errors.hasFieldErrors()) {
+            throw new ExceptionNotValid(errors.getFieldError().getDefaultMessage());
+        }
+        return new UserVO(
+                userService.Register(
+                        userDTO.getUsername(),userDTO.getPassword(),Role.TEACHER
+                ).orElseThrow(() -> new ExceptionNotValid("该账户已注册"))
+        );
+    }
+    @RolesAllowed({UNCERTIFIED_STUDENT_ROLE,UNCERTIFIED_TEACHER_ROLE})
+    @RequestMapping(value="/mail/validate",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public UserVO mailValidate(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody Map certifiedCode, Errors errors) throws ServiceException {
         if(certifiedCode.size()==0||certifiedCode.get("certifiedCode")==null){
             throw new ExceptionNotValid("验证码错误");
@@ -61,6 +70,9 @@ public class StudentController {
         );
 
     }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @RequestMapping(value="/send",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     public String getUser(@PathParam(value = "username")String username, @PathParam(value = "msg")String msg)

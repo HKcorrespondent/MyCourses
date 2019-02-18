@@ -58,7 +58,7 @@ public class WebSecurityConfiguration {
 							userDetailsService, new RestAuthorEntry());
 			http.headers().frameOptions().disable();
 			http.authorizeRequests()
-					.antMatchers("/api/student/register","/api/login","/h2-console/**", "/internal/**", "/webjars/**", "/js/**", "/css/**", "/favicon.ico").permitAll()
+					.antMatchers("/api/student/registerStudent","/api/login","/h2-console/**", "/internal/**", "/webjars/**", "/js/**", "/css/**", "/favicon.ico").permitAll()
 			 		.antMatchers("/file/**").hasAnyAuthority(TEACHER_AUTHORITY.getAuthority(), ADMIN_AUTHORITY.getAuthority())
 					.antMatchers("/api/**").authenticated()
 					.and()
