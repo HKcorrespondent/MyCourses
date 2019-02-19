@@ -67,4 +67,30 @@ public class UserService {
             return Optional.empty();
         }
     }
+
+    public Optional<Student> modifyStudentInfo(String name, String number, String username) {
+        final Optional<Student> byId = studentDAO.findById(username);
+        if(!byId.isPresent()){
+            return Optional.empty();
+        }else{
+            Student student=byId.get();
+            student.setName(name);
+            student.setNumber(number);
+            final Student saved = studentDAO.save(student);
+            return Optional.of(saved);
+        }
+
+    }
+
+    public Optional<Teacher> modifyTeacherInfo(String name, String username) {
+        final Optional<Teacher> byId = teacherDAO.findById(username);
+        if(!byId.isPresent()){
+            return Optional.empty();
+        }else{
+            Teacher teacher=byId.get();
+            teacher.setName(name);
+            final Teacher saved = teacherDAO.save(teacher);
+            return Optional.of(saved);
+        }
+    }
 }

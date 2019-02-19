@@ -1,4 +1,4 @@
-package org.nju.mycourses.web.controller;
+package org.nju.mycourses.web.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-class UserDTO {
+public class UserDTO {
     @JsonProperty(value = "username")
     @NotNull(message = "请填写用户名！")
     @Email(message = "邮箱格式不正确！")

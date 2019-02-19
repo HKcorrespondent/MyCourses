@@ -5,6 +5,10 @@ import org.nju.mycourses.data.entity.Role;
 import org.nju.mycourses.logic.UserService;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
+import org.nju.mycourses.web.controller.dto.UserDTO;
+import org.nju.mycourses.web.controller.vo.StudentVO;
+import org.nju.mycourses.web.controller.vo.TeacherVO;
+import org.nju.mycourses.web.controller.vo.UserVO;
 import org.nju.mycourses.web.security.impl.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -103,5 +107,37 @@ public class UserController {
         Map m=new HashMap<String,String>();
         m.put("data","all");
         return m;
+    }
+
+
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/modifyInfo",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public UserVO modifyStudentInfo(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody Map nameAndNumber, Errors errors) throws ServiceException {
+        if(nameAndNumber.size()==0||nameAndNumber.get("name")==null||nameAndNumber.get("number")==null){
+            throw new ExceptionNotValid("未填写姓名或者号码");
+        }
+        return new StudentVO(
+                userService.modifyStudentInfo(
+                        (String) nameAndNumber.get("name"),
+                        (String)nameAndNumber.get("number"),
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("姓名或者号码不符合规范"))
+        );
+
+    }
+
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/modifyInfo",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public UserVO modifyTeacherInfo(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody Map name, Errors errors) throws ServiceException {
+        if(name.size()==0||name.get("name")==null){
+            throw new ExceptionNotValid("未填写姓名");
+        }
+        return new TeacherVO(
+                userService.modifyTeacherInfo(
+                        (String) name.get("name"),
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("姓名不符合规范"))
+        );
+
     }
 }

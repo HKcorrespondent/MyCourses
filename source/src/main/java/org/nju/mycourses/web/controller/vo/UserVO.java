@@ -1,4 +1,4 @@
-package org.nju.mycourses.web.controller;
+package org.nju.mycourses.web.controller.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
