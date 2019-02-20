@@ -1,14 +1,16 @@
 package org.nju.mycourses.web.controller;
 
 import org.hibernate.service.spi.ServiceException;
+import org.nju.mycourses.data.entity.PublishedCourse;
 import org.nju.mycourses.logic.CourseService;
 import org.nju.mycourses.logic.UserService;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
 import org.nju.mycourses.web.controller.dto.DocDTO;
+import org.nju.mycourses.web.controller.dto.HomeworkDTO;
 import org.nju.mycourses.web.controller.dto.PublishedCourseDTO;
-import org.nju.mycourses.web.controller.vo.CourseVO;
-import org.nju.mycourses.web.controller.vo.PublishedCourseVO;
+import org.nju.mycourses.web.controller.dto.UpHomeworkDTO;
+import org.nju.mycourses.web.controller.vo.*;
 import org.nju.mycourses.web.security.impl.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,9 +18,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.nju.mycourses.web.security.WebSecurityConstants.ADMIN_ROLE;
+import static org.nju.mycourses.web.security.WebSecurityConstants.STUDENT_ROLE;
 import static org.nju.mycourses.web.security.WebSecurityConstants.TEACHER_ROLE;
 
 /**
@@ -43,8 +50,9 @@ public class CourseController {
     }
 
     @RolesAllowed({TEACHER_ROLE})
-    @RequestMapping(value="/course",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public CourseVO createCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map course, Errors errors) throws ServiceException {
+    @RequestMapping(value="/teacher/course",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public CourseVO createCourse(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                 @RequestBody Map course, Errors errors) throws ServiceException {
         if(course.size()==0||course.get("name")==null){
             throw new ExceptionNotValid("未填写课程名");
         }
@@ -59,7 +67,8 @@ public class CourseController {
 
     @RolesAllowed({ADMIN_ROLE})
     @RequestMapping(value="/course/pass",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-    public CourseVO passCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam Integer id, Errors errors) throws ServiceException {
+    public CourseVO passCourse(@AuthenticationPrincipal CustomUserDetails userDetails,
+                               @RequestParam Integer id) throws ServiceException {
         return new CourseVO(
                 courseService.passCourse(
                         id,
@@ -71,8 +80,9 @@ public class CourseController {
 
 
     @RolesAllowed({TEACHER_ROLE})
-    @RequestMapping(value="/course/{id}/doc",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public CourseVO postDoc(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody DocDTO docs, @PathVariable Integer id, Errors errors) throws ServiceException {
+    @RequestMapping(value="/teacher/course/{id}/doc",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public CourseVO postDoc(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody DocDTO docs,
+                            @PathVariable Integer id, Errors errors) throws ServiceException {
         return new CourseVO(
                 courseService.postDoc(
                         docs.getDocs(),
@@ -84,8 +94,9 @@ public class CourseController {
     }
 
     @RolesAllowed({TEACHER_ROLE})
-    @RequestMapping(value="/course/{id}/publish",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public PublishedCourseVO publishCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody PublishedCourseDTO courseDTO, @PathVariable Integer id, Errors errors) throws ServiceException {
+    @RequestMapping(value="/teacher/course/{id}/publish",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public PublishedCourseVO publishCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody PublishedCourseDTO courseDTO,
+                                           @PathVariable Integer id, Errors errors) throws ServiceException {
         return new PublishedCourseVO(
                 courseService.publishCourse(
                         courseDTO,
@@ -93,12 +104,12 @@ public class CourseController {
                         userDetails.getUsername()
                 ).orElseThrow(() -> new ExceptionNotValid("要发布的课程不存在"))
         );
-
     }
 
     @RolesAllowed({ADMIN_ROLE})
     @RequestMapping(value="/course/{id}/publish/pass",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-    public PublishedCourseVO passCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam Integer publishId, @PathVariable Integer id,Errors errors) throws ServiceException {
+    public PublishedCourseVO passCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam Integer publishId,
+                                        @PathVariable Integer id) throws ServiceException {
         return new PublishedCourseVO(
                 courseService.passPublishedCourse(
                         publishId,
@@ -106,6 +117,95 @@ public class CourseController {
                         userDetails.getUsername()
                 ).orElseThrow(() -> new ExceptionNotValid("要通过的课程或发布课程不存在"))
         );
-
     }
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public TotalCourseVO teacherOneCourse(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @PathVariable Integer id) throws ServiceException {
+        return new TotalCourseVO(
+                courseService.getCourse(id,userDetails.getUsername()).orElseThrow(() -> new ExceptionNotValid("课程不存在")),
+                courseService.getPublishedCourses(id,userDetails.getUsername())
+        );
+    }
+
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}/publish/{publishId}",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public PublishedCourseDetailVO teacherOnePublishCourse(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                 @PathVariable Integer id, @PathVariable Integer publishId) throws ServiceException {
+
+
+        final PublishedCourse publishedCourse = courseService.getPublishedCourse(id, publishId, userDetails.getUsername()).orElseThrow(() -> new ExceptionNotValid("课程不存在"));
+        return new PublishedCourseDetailVO(
+                publishedCourse
+        );
+    }
+
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public Map teacherCourses(@AuthenticationPrincipal CustomUserDetails userDetails) throws ServiceException {
+        Map<String,Object> courseVOMap =new HashMap<>();
+        List<CourseVO> courseVOs;
+        courseVOs=courseService.getTeacherCourse(userDetails.getUsername())
+                .stream().map(CourseVO::new).collect(Collectors.toList());
+        courseVOMap.put("courses",courseVOs);
+        return courseVOMap;
+    }
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/course",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public Map studentCourse(@AuthenticationPrincipal CustomUserDetails userDetails) throws ServiceException {
+        Map<String,Object> publishedCourseVOMap =new HashMap<>();
+        List<PublishedCourseVO> publishedCourseVOs;
+        publishedCourseVOs=courseService.getCouldSelectCourse(userDetails.getUsername())
+                .stream().map(PublishedCourseVO::new).collect(Collectors.toList());
+        publishedCourseVOMap.put("publishedCourses",publishedCourseVOs);
+        return publishedCourseVOMap;
+    }
+
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}/publish/{publishId}/homework",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public HomeworkVO postHomework(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody HomeworkDTO homeworkDTO,
+                                   @PathVariable Integer id, @PathVariable Integer publishId, Errors errors) throws ServiceException {
+        return new HomeworkVO(
+                courseService.postHomework(
+                        homeworkDTO,
+                        id,publishId,
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("要发布作业的课程不存在"))
+        );
+    }
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}/publish/{publishId}/homework/{hwId}",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public HomeworkVO getHomework(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                  @PathVariable Integer id, @PathVariable Integer publishId, @PathVariable Integer hwId) throws ServiceException {
+        return new HomeworkVO(
+                courseService.getHomework(
+                        hwId,id,publishId,
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("要发布作业的课程不存在"))
+        );
+    }
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/course/{id}/publish/{publishId}/homework/{homeworkId}",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public UpHomeworkVO upHomework(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UpHomeworkDTO upHomeworkDTO,
+                                   @PathVariable Integer id, @PathVariable Integer publishId, @PathVariable Integer homeworkId, Errors errors) throws ServiceException {
+        return new UpHomeworkVO(
+                courseService.upHomework(
+                        upHomeworkDTO,
+                        id,publishId,homeworkId,
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("要提交的作业不存在"))
+        );
+    }
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/course/{id}/publish/{publishId}/select",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public PublishedCourseVO selectCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map body,
+                                   @PathVariable Integer id, @PathVariable Integer publishId,  Errors errors) throws ServiceException {
+        return new PublishedCourseVO(
+                courseService.selectCourse(
+                        id,publishId,
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("课程人数已满"))
+        );
+    }
+
 }

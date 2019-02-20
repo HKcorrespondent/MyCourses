@@ -1,7 +1,10 @@
 package org.nju.mycourses.data;
 
+import org.nju.mycourses.data.entity.Course;
 import org.nju.mycourses.data.entity.PublishedCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * @InterfaceName PublishedCourseDAO
@@ -12,4 +15,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Description //TODO
  **/
 public interface PublishedCourseDAO extends JpaRepository<PublishedCourse,Integer> {
+    List<PublishedCourse> findAllByCourse(Course course);
 }

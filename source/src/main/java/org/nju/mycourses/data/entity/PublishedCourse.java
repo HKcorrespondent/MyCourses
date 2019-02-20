@@ -1,6 +1,9 @@
 package org.nju.mycourses.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.builder.EqualsExclude;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -9,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName PublishedCourseDAO
@@ -20,10 +24,12 @@ import java.util.List;
  **/
 @Entity
 @Data
+@EqualsAndHashCode(exclude = {"classMap", "students", "Homework"})
+@Table(name = "publishedCourse")
 public class PublishedCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "pid")
     private Integer id;
     /**
      * 课程长名
@@ -50,21 +56,26 @@ public class PublishedCourse {
      */
     private LocalDateTime selectEnd;
 
-    private Integer classNum;
-    private Integer studentEachClass;
+    private Integer classNumLimit;
+    private Integer studentEachClassLimit;
+
+    private Integer studentTotalNum;
+
+    @ElementCollection()
+    private Map<String,Integer> classMap;
 
     @ManyToOne(targetEntity = Course.class)
-    @JoinColumn(referencedColumnName = "username")
+    @JoinColumn(name = "cid")
     private Course course;
 
     /**
      * 选课学生
      */
     @ManyToMany
-    @JoinTable(name="STUDENT_COURSE", joinColumns = @JoinColumn(name = "publishedCourses", referencedColumnName = "id"),
+    @JoinTable(name="STUDENT_COURSE", joinColumns = @JoinColumn(name = "publishedCourses", referencedColumnName = "pid"),
             inverseJoinColumns = @JoinColumn(name = "student", referencedColumnName = "username"))
     private List<Student> students=new LinkedList<>();
 
     @ElementCollection()
-    private List<UpHomework> upHomework;
+    private List<Homework> Homework;
 }

@@ -35,7 +35,7 @@ public class UserService {
         newUser.setPassword(DigestUtils.sha256Hex(password));
         newUser.setRole(role);
         newUser.setState(State.UNCERTIFIED);
-        String certifiedCode=UUID.randomUUID().toString().replace("-", "").substring(5);
+        String certifiedCode=UUID.randomUUID().toString().replace("-", "").substring(2,8);
         newUser.setCERTIFIED_CODE(certifiedCode);
         emailService.send(email,"欢迎注册myCourses平台!","您的验证码是:"+certifiedCode);
         final User user = userDAO.save(newUser);
@@ -52,7 +52,19 @@ public class UserService {
         }
         return Optional.of(user);
     }
-
+    public Optional<User> registerAdmin(String username, String password) {
+        if(userDAO.findById(username).isPresent()){
+            return Optional.empty();
+        }
+        User newUser=new User();
+        newUser.setUsername(username);
+        newUser.setPassword(DigestUtils.sha256Hex(password));
+        newUser.setRole(Role.ADMIN);
+        newUser.setState(State.INFORCE);
+        newUser.setCERTIFIED_CODE("不需要");
+        final User user = userDAO.save(newUser);
+        return Optional.of(user);
+    }
     public Optional<User> validateEmail(String code, String username) {
         final Optional<User> user = userDAO.findById(username);
         if(user.isPresent()){
@@ -93,4 +105,14 @@ public class UserService {
             return Optional.of(saved);
         }
     }
+
+    public Optional<Student> getStudent(String username) {
+        return studentDAO.findById(username);
+    }
+
+    public Optional<Teacher> getTeacher(String username) {
+        return teacherDAO.findById(username);
+    }
+
+
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import org.nju.mycourses.data.entity.Role;
 import org.nju.mycourses.data.entity.State;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -14,7 +15,7 @@ import javax.persistence.Id;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     @Id
-    @JsonProperty(value = "username")
+    @Column(name = "username")
     private String username;
     @JsonProperty(value = "password")
     private String password;

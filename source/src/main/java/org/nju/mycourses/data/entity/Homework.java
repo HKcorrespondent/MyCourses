@@ -19,7 +19,7 @@ import java.util.List;
 public class Homework {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "hid")
     private Integer id;
 
     private String name;
@@ -29,6 +29,7 @@ public class Homework {
     private State state;
 
     private String type;
+
     /**
      * 作业可以开始提交时间
      */
@@ -41,5 +42,5 @@ public class Homework {
      * 提交的作业
      */
     @ElementCollection()
-    private List<Document> upHomework;
+    private List<UpHomework> upHomework;
 }

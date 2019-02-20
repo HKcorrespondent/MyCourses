@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -13,7 +14,7 @@ import javax.persistence.OneToOne;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Teacher {
     @Id
-    @JsonProperty(value = "username")
+    @Column(name = "username")
     private String username;
 
     private String name;

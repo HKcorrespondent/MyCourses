@@ -14,7 +14,7 @@ public class Document {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid")
-    @Column(name = "id",length = 32, nullable = false)
+    @Column(name = "did",length = 32, nullable = false)
     @ToString.Exclude
     private String id;
 

@@ -3,31 +3,27 @@ package org.nju.mycourses.web.controller.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import org.nju.mycourses.data.entity.PublishedCourse;
 import org.nju.mycourses.data.entity.State;
-import org.nju.mycourses.data.entity.Teacher;
 import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * @ClassName PublishedCourseDTO
- * @PackageName org.nju.mycourses.web.controller
+ * @ClassName PublishedCourseDetailVO
+ * @PackageName org.nju.mycourses.web.controller.vo
  * @Author sheen
- * @Date 2019/2/19
+ * @Date 2019/2/20
  * @Version 1.0
  * @Description //TODO
  **/
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PublishedCourseVO {
+public class PublishedCourseDetailVO {
 
     private Integer id;
     @JsonProperty("startAt")
@@ -61,9 +57,25 @@ public class PublishedCourseVO {
 
     @JsonProperty("state")
     private State state;
-
-    public PublishedCourseVO(PublishedCourse publishedCourse) {
-        this.courseVO=new CourseVO(publishedCourse.getCourse());
-        BeanUtils.copyProperties(publishedCourse, this);
+    @JsonProperty("homework")
+    private List<HomeworkVO> homework;
+    @JsonProperty("students")
+    private List<StudentVO> students;
+    public PublishedCourseDetailVO(PublishedCourse publishedCourse) {
+        this.courseVO = new CourseVO(publishedCourse.getCourse());
+        this.homework = publishedCourse.getHomework().stream().map(HomeworkVO::new).collect(Collectors.toList());
+        this.students = publishedCourse.getStudents().stream().map(StudentVO::new).collect(Collectors.toList());
+        this.id = publishedCourse.getId();
+        this.startAt = publishedCourse.getStartAt();
+        this.endAt = publishedCourse.getEndAt();
+        this.selectStart = publishedCourse.getSelectStart();
+        this.selectEnd = publishedCourse.getSelectEnd();
+        this.classNumLimit = publishedCourse.getClassNumLimit();
+        this.studentEachClassLimit = publishedCourse.getStudentEachClassLimit();
+        this.studentTotalNum = publishedCourse.getStudentTotalNum();
+        this.description = publishedCourse.getDescription();
+        this.longName = publishedCourse.getLongName();
+        this.state = publishedCourse.getState();
     }
+
 }

@@ -1,0 +1,1325 @@
+{
+  "front-version": "2.19.1",
+  "version": 3,
+  "nodes": [
+    {
+      "type": "Project",
+      "id": "cc95667a-3575-4660-a82b-d1cac7e751fc",
+      "lastModified": "2019-02-20T18:47:36.896+08:00",
+      "name": "j2ee"
+    },
+    {
+      "type": "Service",
+      "id": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14",
+      "lastModified": "2019-02-20T15:19:33.265+08:00",
+      "name": "学生1",
+      "parentId": "cc95667a-3575-4660-a82b-d1cac7e751fc"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"${\"username\"}\",\n\t\"password\": \"${\"password\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/UNCERTIFIED_STUDENT_ROLE"
+      },
+      "id": "00dcb667-193f-4a42-9412-64d2c94af951",
+      "lastModified": "2019-02-19T17:12:59.523+08:00",
+      "name": "test-UNCERTIFIED_STUDENT_ROLE",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"${\"username\"}\",\n\t\"password\": \"${\"password\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/all"
+      },
+      "id": "eb89b8ec-99b0-4c9a-ba8c-1ef4a9eef916",
+      "lastModified": "2019-02-19T17:12:59.523+08:00",
+      "name": "test-all",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"name\": \"张三\",\n  \t\"number\": \"161250169\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/modifyInfo"
+      },
+      "id": "004f3bcc-bd4b-456b-b5f6-353cac0ded64",
+      "lastModified": "2019-02-20T15:34:21.391+08:00",
+      "name": "修改信息",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"${\"username\"}\",\n\t\"password\": \"${\"password\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/register"
+      },
+      "id": "d8c1ef6f-497f-4edf-b1d0-af8c69c140ee",
+      "lastModified": "2019-02-20T15:16:07.636+08:00",
+      "name": "学生注册",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"certifiedCode\": \"${\"uTcertifiedCode\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student"
+      },
+      "id": "bddec173-ed40-456d-9692-41ac616b8570",
+      "lastModified": "2019-02-20T15:31:45.035+08:00",
+      "name": "查看信息",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"${\"username\"}\",\n\t\"password\": \"${\"password\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/login"
+      },
+      "id": "056c740b-6ad2-4e28-a660-94ee16bb1c0b",
+      "lastModified": "2019-02-20T15:16:27.931+08:00",
+      "name": "登录",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"certifiedCode\": \"${\"uStcertifiedCode1\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/mail/validate"
+      },
+      "id": "3b04bcf3-ac92-404d-911a-ed9bf523ed97",
+      "lastModified": "2019-02-20T15:19:01.469+08:00",
+      "name": "验证帐号",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "ef3d776f-a3bb-45c0-95b5-60a22fb59c14"
+    },
+    {
+      "type": "Service",
+      "id": "d4f2976b-cb88-4b2d-bc9b-ae57d9a14db0",
+      "lastModified": "2019-02-20T16:34:25.140+08:00",
+      "name": "学生课程相关",
+      "parentId": "cc95667a-3575-4660-a82b-d1cac7e751fc"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n    \"name\": \"第一次作业\",\n  \t\"path\": \"https://cseiii-image-hosting.oss-cn-shenzhen.aliyuncs.com/ppt/%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A.txt\",\n\t\"type\": \"其他类型\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/course/${\"cid\"}/publish/${\"pcid\"}/homework/${\"hwid\"}"
+      },
+      "id": "f2ecc8da-8338-449e-8063-8a1845a2164b",
+      "lastModified": "2019-02-20T16:50:12.294+08:00",
+      "name": "学生上传作业",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d4f2976b-cb88-4b2d-bc9b-ae57d9a14db0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n    \"name\": \"第一次作业相关问题\",\n  \t\"content\": \"这个问题就是要问什么问题\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/course/${\"cid\"}/forum"
+      },
+      "id": "697cc12f-dee8-49e7-a426-7d2722cc2ebc",
+      "lastModified": "2019-02-20T18:20:45.077+08:00",
+      "name": "学生发帖",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d4f2976b-cb88-4b2d-bc9b-ae57d9a14db0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"certifiedCode\": \"${\"uTcertifiedCode\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/course"
+      },
+      "id": "ed9bcc75-31a7-4610-8eeb-adeb16efe2d9",
+      "lastModified": "2019-02-20T16:36:24.555+08:00",
+      "name": "学生查看可选的课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d4f2976b-cb88-4b2d-bc9b-ae57d9a14db0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n  \t\"content\": \"楼上上问的问题是什么问题\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/course/${\"cid\"}/forum/${\"fid\"}"
+      },
+      "id": "756d7489-5602-42fb-a65f-850dc757295d",
+      "lastModified": "2019-02-20T18:47:36.897+08:00",
+      "name": "学生跟帖",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d4f2976b-cb88-4b2d-bc9b-ae57d9a14db0"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/student/course/${\"cid\"}/publish/${\"pcid\"}/select"
+      },
+      "id": "ef647510-a08d-4999-836f-815e87dae006",
+      "lastModified": "2019-02-20T16:38:00.470+08:00",
+      "name": "学生选择发布的课程上课",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uStAuthorization1\"}"
+        },
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d4f2976b-cb88-4b2d-bc9b-ae57d9a14db0"
+    },
+    {
+      "type": "Service",
+      "id": "d46782e3-be89-46f5-966c-a75c15b592d9",
+      "lastModified": "2019-02-20T15:42:48.980+08:00",
+      "name": "管理员",
+      "parentId": "cc95667a-3575-4660-a82b-d1cac7e751fc"
+    },
+    {
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"admin\",\n\t\"password\": \"Admin\"\n}"
+      },
+      "headersType": "Raw",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "publishId",
+              "value": "${\"pcid\"}"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/course/${\"cid\"}/publish/pass"
+      },
+      "id": "dc7a509b-1bbb-4c21-b7fb-affb4885282d",
+      "lastModified": "2019-02-20T16:14:54.359+08:00",
+      "name": "审批发布的课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uAAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d46782e3-be89-46f5-966c-a75c15b592d9"
+    },
+    {
+      "uriEditor": true,
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"admin\",\n\t\"password\": \"Admin\"\n}"
+      },
+      "headersType": "Raw",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": [
+            {
+              "enabled": true,
+              "name": "id",
+              "value": "${\"cid\"}"
+            }
+          ]
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/course/pass"
+      },
+      "id": "1fe60492-934f-4d58-8de3-c657590adf41",
+      "lastModified": "2019-02-20T15:51:53.886+08:00",
+      "name": "审批课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uAAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d46782e3-be89-46f5-966c-a75c15b592d9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"admin\",\n\t\"password\": \"Admin\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/admin/register"
+      },
+      "id": "ae01373c-c896-4a70-9d1b-384dcc6aa88a",
+      "lastModified": "2019-02-20T15:48:33.275+08:00",
+      "name": "管理员注册",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d46782e3-be89-46f5-966c-a75c15b592d9"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"admin\",\n\t\"password\": \"Admin\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/login"
+      },
+      "id": "26bd6023-3c40-4162-9542-94d264f76a6f",
+      "lastModified": "2019-02-20T15:49:15.481+08:00",
+      "name": "管理员登录",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "d46782e3-be89-46f5-966c-a75c15b592d9"
+    },
+    {
+      "type": "Service",
+      "id": "e3b3b376-8560-49a5-8869-4459a8b3bb6e",
+      "lastModified": "2019-02-20T15:19:44.182+08:00",
+      "name": "老师",
+      "parentId": "cc95667a-3575-4660-a82b-d1cac7e751fc"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"name\": \"老师一\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/modifyInfo"
+      },
+      "id": "263997bb-cbb5-4a00-8f6a-e92d9d8052bb",
+      "lastModified": "2019-02-20T15:35:07.015+08:00",
+      "name": "修改信息",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "e3b3b376-8560-49a5-8869-4459a8b3bb6e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"certifiedCode\": \"${\"uTcertifiedCode\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher"
+      },
+      "id": "7d3f9a9e-5c6f-4629-82ef-466749e07942",
+      "lastModified": "2019-02-20T15:31:18.219+08:00",
+      "name": "查看信息",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "e3b3b376-8560-49a5-8869-4459a8b3bb6e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"${\"Tusername\"}\",\n\t\"password\": \"${\"Tpassword\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/register"
+      },
+      "id": "f0bf0740-71ae-4339-a772-8027c5354014",
+      "lastModified": "2019-02-20T15:21:12.548+08:00",
+      "name": "老师注册",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "e3b3b376-8560-49a5-8869-4459a8b3bb6e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"username\": \"${\"Tusername\"}\",\n\t\"password\": \"${\"Tpassword\"}\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/login"
+      },
+      "id": "63b7de83-ee5b-441a-9ebb-d39cba3ae7b2",
+      "lastModified": "2019-02-20T15:22:57.414+08:00",
+      "name": "老师登录",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "e3b3b376-8560-49a5-8869-4459a8b3bb6e"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"certifiedCode\": \"${\"uTcertifiedCode\"}\"\n}"
+      },
+      "headersType": "Raw",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/mail/validate"
+      },
+      "id": "8a1239e7-7dbf-4a41-9916-b64ac46429b1",
+      "lastModified": "2019-02-20T15:50:03.574+08:00",
+      "name": "验证帐号",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "e3b3b376-8560-49a5-8869-4459a8b3bb6e"
+    },
+    {
+      "type": "Service",
+      "id": "91d40f63-3226-4bfb-846b-a4e500d4ab79",
+      "lastModified": "2019-02-20T15:36:43.943+08:00",
+      "name": "老师课程相关",
+      "parentId": "cc95667a-3575-4660-a82b-d1cac7e751fc"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n  \"docs\": [{\n  \t\"name\":\"第一节课ppt\",\n    \"path\":\"https://cseiii-image-hosting.oss-cn-shenzhen.aliyuncs.com/ppt/introduction.ppt\",\n    \"type\":\"ppt\"\n  },{\n  \t\"name\":\"第二节课ppt\",\n    \"path\":\"https://cseiii-image-hosting.oss-cn-shenzhen.aliyuncs.com/ppt/introduction.ppt\",\n    \"type\":\"ppt\"\n  }]\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course/${\"cid\"}/doc"
+      },
+      "id": "f93ab2ba-15b2-4a94-9313-4b3b4dafdfa0",
+      "lastModified": "2019-02-20T18:08:20.102+08:00",
+      "name": "上传课件",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"name\": \"软工1\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course"
+      },
+      "id": "ddce2f26-740d-4888-971e-ac8ad62be24c",
+      "lastModified": "2019-02-20T17:54:40.578+08:00",
+      "name": "创建课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n    \"name\": \"第一次作业\",\n  \t\"description\": \"本次作业要求阅读书10-50页，然后写一篇超过500字的读后感\",\n\t\"type\": \"其他类型\",\n  \t\"startAt\": \"2019-03-01 10:00:00\",\n  \t\"endAt\": \"2019-03-08 10:00:00\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course/${\"cid\"}/publish/${\"pcid\"}/homework"
+      },
+      "id": "0295b362-39d4-43b6-98c3-b90fd54a7d0d",
+      "lastModified": "2019-02-20T16:43:59.887+08:00",
+      "name": "发布作业",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "requestBody": true,
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+        "name": "POST"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"startAt\": \"2019-02-26 10:00:00\",\n  \t\"endAt\": \"2019-06-25 10:00:00\",\n  \t\"selectStart\": \"2019-02-25 10:00:00\",\n  \t\"selectEnd\": \"2019-03-10 10:00:00\",\n  \t\"classNumLimit\": 2,\n  \t\"studentEachClassLimit\": 120,\n  \t\"description\": \"这是2019软工1春季的描述\",\n  \t\"longName\": \"2019软工1春季\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course/${\"cid\"}/publish"
+      },
+      "id": "c6d77403-ec7b-403c-9762-b44caaf8ff1a",
+      "lastModified": "2019-02-20T16:05:47.250+08:00",
+      "name": "发布课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"name\": \"软工1\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course"
+      },
+      "id": "0b037219-c180-410a-aa0d-cffd3c513d7a",
+      "lastModified": "2019-02-20T15:42:43.281+08:00",
+      "name": "查看所有课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"name\": \"软工1\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course/${\"cid\"}/publish/${\"pcid\"}"
+      },
+      "id": "349a09b4-8cab-47c8-bca2-3bf9684cbe85",
+      "lastModified": "2019-02-20T17:15:06.550+08:00",
+      "name": "查看某一发布课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    },
+    {
+      "type": "Request",
+      "method": {
+        "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+        "name": "GET"
+      },
+      "body": {
+        "formBody": {
+          "overrideContentType": true,
+          "encoding": "application/x-www-form-urlencoded",
+          "items": []
+        },
+        "bodyType": "Text",
+        "autoSetLength": true,
+        "textBody": "{\n\t\"name\": \"软工1\"\n}"
+      },
+      "headersType": "Form",
+      "uri": {
+        "query": {
+          "delimiter": "&",
+          "items": []
+        },
+        "scheme": {
+          "name": "http",
+          "version": "V11"
+        },
+        "host": "localhost:4080",
+        "path": "/api/teacher/course/${\"cid\"}"
+      },
+      "id": "a3488adb-1f8d-484d-ad16-11d95d374be9",
+      "lastModified": "2019-02-20T16:07:10.935+08:00",
+      "name": "查看某一课程下的发布课程",
+      "headers": [
+        {
+          "enabled": true,
+          "name": "Authorization",
+          "value": "${\"uTAuthorization\"}"
+        }
+      ],
+      "metaInfo": {},
+      "parentId": "91d40f63-3226-4bfb-846b-a4e500d4ab79"
+    }
+  ]
+}

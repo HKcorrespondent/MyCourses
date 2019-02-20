@@ -17,7 +17,7 @@ spring:
   jpa:
     hibernate:
     #重启服务器只在当前基础上更新而不抛弃原有数据库
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   datasource:
     url: jdbc:h2:file:~/.h2/mycourses

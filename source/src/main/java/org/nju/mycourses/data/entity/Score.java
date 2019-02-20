@@ -17,11 +17,13 @@ import javax.persistence.*;
 public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "sid")
     private Integer id;
-
-    private PublishedCourse course;
-
+    @ManyToOne
+    @JoinColumn(name="published_course_id")
+    private PublishedCourse publishedCourse;
+    @ManyToOne
+    @JoinColumn(name="student_id")
     private Student student;
 
     private Integer score;

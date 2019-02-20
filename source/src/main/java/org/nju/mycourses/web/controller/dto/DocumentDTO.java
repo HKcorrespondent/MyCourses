@@ -1,4 +1,4 @@
-package org.nju.mycourses.web.controller.vo;
+package org.nju.mycourses.web.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -14,16 +14,9 @@ import org.nju.mycourses.data.entity.Document;
  **/
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DocumentVO {
-    private String id;
+public class DocumentDTO {
     private String name;
     private String path;
     private String type;
 
-    public DocumentVO(Document document) {
-        this.id = document.getId();
-        this.name = document.getName();
-        this.path = document.getPath();
-        this.type = document.getType();
-    }
 }

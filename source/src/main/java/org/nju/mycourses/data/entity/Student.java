@@ -10,10 +10,10 @@ import java.util.Set;
 
 @Entity
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "student")
 public class Student {
     @Id
-    @JsonProperty(value = "username")
+    @Column(name = "username")
     private String username;
 
     private String name;
@@ -22,8 +22,8 @@ public class Student {
     @OneToOne
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="STUDENT_COURSE", joinColumns = @JoinColumn(name = "student", referencedColumnName = "username"),
-            inverseJoinColumns = @JoinColumn(name = "publishedCourses", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "publishedCourses", referencedColumnName = "pid"))
     private Set<PublishedCourse> courses = new HashSet<>();
 }

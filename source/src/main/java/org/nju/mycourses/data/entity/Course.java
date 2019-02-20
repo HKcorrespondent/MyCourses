@@ -12,7 +12,7 @@ import java.util.List;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "cid")
     private Integer id;
     /**
      * 课程名
@@ -24,7 +24,7 @@ public class Course {
     private State state;
 
     @ManyToOne(targetEntity = Teacher.class, fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "username")
+    @JoinColumn(name = "username")
     private Teacher teacher;
 
     @ElementCollection()

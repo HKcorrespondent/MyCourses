@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  **/
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ForumVO {
+public class ForumOutlineVO {
     private Integer id;
     /**
      * 帖子数
@@ -40,9 +40,7 @@ public class ForumVO {
     @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startAt;
 
-    private List<RemarkVO> remarks;
-    public ForumVO(Forum forum) {
-        this.remarks=forum.getRemarks().stream().map(RemarkVO::new).collect(Collectors.toList());
+    public ForumOutlineVO(Forum forum) {
         BeanUtils.copyProperties(forum,this);
     }
 }

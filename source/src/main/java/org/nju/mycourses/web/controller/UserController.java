@@ -61,6 +61,15 @@ public class UserController {
                 ).orElseThrow(() -> new ExceptionNotValid("该账户已注册"))
         );
     }
+    @RequestMapping(value="/admin/register",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public UserVO registerAdmin(@RequestBody @Validated(PostMapping.class) UserDTO userDTO, Errors errors) throws ServiceException {
+        return new UserVO(
+                userService.registerAdmin(
+                        userDTO.getUsername(),userDTO.getPassword()
+                ).orElseThrow(() -> new ExceptionNotValid("该账户已注册"))
+        );
+    }
+
     @RolesAllowed({UNCERTIFIED_STUDENT_ROLE,UNCERTIFIED_TEACHER_ROLE})
     @RequestMapping(value="/mail/validate",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public UserVO mailValidate(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody Map certifiedCode, Errors errors) throws ServiceException {
@@ -108,8 +117,22 @@ public class UserController {
         m.put("data","all");
         return m;
     }
-
-
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public StudentVO student(@AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+        return new StudentVO(userService.getStudent(userDetails.getUsername())
+                .orElseThrow(() -> new ExceptionNotValid("用户不存在"))
+        );
+    }
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public TeacherVO teacher(@AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+        return new TeacherVO(userService.getTeacher(userDetails.getUsername())
+                .orElseThrow(() -> new ExceptionNotValid("用户不存在"))
+        );
+    }
     @RolesAllowed({STUDENT_ROLE})
     @RequestMapping(value="/student/modifyInfo",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public UserVO modifyStudentInfo(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestBody Map nameAndNumber, Errors errors) throws ServiceException {
@@ -136,7 +159,7 @@ public class UserController {
                 userService.modifyTeacherInfo(
                         (String) name.get("name"),
                         userDetails.getUsername()
-                ).orElseThrow(() -> new ExceptionNotValid("姓名不符合规范"))
+                ).orElseThrow(() -> new ExceptionNotValid("要选的课程不存在"))
         );
 
     }

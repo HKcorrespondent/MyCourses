@@ -21,10 +21,10 @@ public class UpHomework {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid")
-    @Column(name = "id",length = 32, nullable = false)
+    @Column(name = "uhid",length = 32, nullable = false)
     @ToString.Exclude
     private String id;
-
+//path是按学号保存的
     @Basic
     @Column(nullable = false)
     private String path;
@@ -37,6 +37,9 @@ public class UpHomework {
 
     private LocalDateTime upTime;
 
+    private State state;
+    @ManyToOne
+    @JoinColumn(name="uper_id")
     private Student uper;
 
     private Integer score=0;
