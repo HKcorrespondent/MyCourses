@@ -41,6 +41,6 @@ public class UpHomework {
     @ManyToOne
     @JoinColumn(name="uper_id")
     private Student uper;
-
+    private String uperUsername;
     private Integer score=0;
 }

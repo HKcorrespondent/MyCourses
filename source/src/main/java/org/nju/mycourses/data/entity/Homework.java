@@ -43,4 +43,6 @@ public class Homework {
      */
     @ElementCollection()
     private List<UpHomework> upHomework;
+
+    private boolean isOpen=false;
 }

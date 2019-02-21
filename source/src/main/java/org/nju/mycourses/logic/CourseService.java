@@ -4,11 +4,7 @@ import org.nju.mycourses.data.*;
 import org.nju.mycourses.data.entity.*;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
-import org.nju.mycourses.web.controller.dto.DocumentDTO;
-import org.nju.mycourses.web.controller.dto.HomeworkDTO;
-import org.nju.mycourses.web.controller.dto.PublishedCourseDTO;
-import org.nju.mycourses.web.controller.dto.UpHomeworkDTO;
-import org.nju.mycourses.web.controller.vo.DocumentVO;
+import org.nju.mycourses.web.controller.dto.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +31,11 @@ public class CourseService {
     private final PublishedCourseDAO publishedCourseDAO;
     private final HomeworkDAO homeworkDAO;
     private final UpHomeworkDAO upHomeworkDAO;
+    private final ScoreDAO scoreDAO;
     @Autowired
     public CourseService(UserDAO userDAO, EmailService emailService, StudentDAO studentDAO,
                          TeacherDAO teacherDAO, CourseDAO courseDAO, DocumentDAO documentDAO,
-                         PublishedCourseDAO publishedCourseDAO, HomeworkDAO homeworkDAO, UpHomeworkDAO upHomeworkDAO) {
+                         PublishedCourseDAO publishedCourseDAO, HomeworkDAO homeworkDAO, UpHomeworkDAO upHomeworkDAO, ScoreDAO scoreDAO) {
         this.userDAO = userDAO;
         this.emailService = emailService;
         this.studentDAO = studentDAO;
@@ -48,6 +45,7 @@ public class CourseService {
         this.publishedCourseDAO = publishedCourseDAO;
         this.homeworkDAO = homeworkDAO;
         this.upHomeworkDAO = upHomeworkDAO;
+        this.scoreDAO = scoreDAO;
     }
 
     public Optional<Course> createCourse(String name, String username) {
@@ -198,6 +196,7 @@ public class CourseService {
         }
         UpHomework upHomework=new UpHomework();
         upHomework.setUper(studentOptional.get());
+        upHomework.setUperUsername(studentOptional.get().getUsername());
         upHomework.setUpTime(LocalDateTime.now()) ;
         upHomework.setScore(0);
         upHomework.setState(State.UNCERTIFIED);
@@ -253,6 +252,44 @@ public class CourseService {
         final PublishedCourse savedPublishedCourse = publishedCourseDAO.save(publishedCourse);
         return Optional.of(savedPublishedCourse);
     }
+    public Optional<PublishedCourse> unSelectCourse(Integer id, Integer publishId, String username) {
+        Optional<PublishedCourse> publishedCourseOptional = publishedCourseDAO.findById(publishId);
+        Optional<Student> studentOptional = studentDAO.findById(username);
+        if(!publishedCourseOptional.isPresent()||!studentOptional.isPresent()){
+            return Optional.empty();
+        }
+        PublishedCourse publishedCourse=publishedCourseOptional.get();
+        Student student=studentOptional.get();
+        Set<PublishedCourse> publishedCourseSet = student.getCourses();
+        //确定此人选了这门课
+        if(!publishedCourseSet.contains(publishedCourse)){//todo:
+            throw new ExceptionNotValid("未选该课程");
+        }
+
+        //分配班级，减少选课人数 todo:还要确定他在哪里班级
+        Map<String, Integer> classMap = publishedCourse.getClassMap();
+        Integer studentTotalNum = publishedCourse.getStudentTotalNum();
+        List<Student> students = publishedCourse.getStudents();
+
+        students.remove(student);
+        studentTotalNum=studentTotalNum-1;
+        List<String> couldAddClass=new ArrayList<>();
+        classMap.keySet().forEach(k->{
+            if(classMap.get(k)>0){
+                couldAddClass.add(k);
+            }
+        });
+        int listNum=(int) (Math.random() * couldAddClass.size());
+        String className=couldAddClass.get(listNum);
+        classMap.put(className,classMap.get(className)-1);
+
+        publishedCourse.setClassMap(classMap);
+        publishedCourse.setStudentTotalNum(studentTotalNum);
+        publishedCourse.setStudents(students);
+
+        final PublishedCourse savedPublishedCourse = publishedCourseDAO.save(publishedCourse);
+        return Optional.of(savedPublishedCourse);
+    }
 
     public Optional<Homework> getHomework(Integer hwId,Integer id, Integer publishId, String username) {
         return homeworkDAO.findById(hwId);
@@ -260,5 +297,64 @@ public class CourseService {
 
     public Optional<PublishedCourse> getPublishedCourse(Integer id, Integer publishId, String username) {
         return publishedCourseDAO.findById(publishId);
+    }
+
+
+    public List<UpHomework> homeworkScore(HomeworkScoreDTO homeworkScoreDTO, Integer id, Integer publishId, Integer homeworkId, String username) {
+        Optional<Homework> homeworkOptional = homeworkDAO.findById(homeworkId);
+        Optional<Teacher> teacherOptional = teacherDAO.findById(username);
+        Optional<PublishedCourse> publishedCourseOptional = publishedCourseDAO.findById(publishId);
+        if(!homeworkOptional.isPresent()||!teacherOptional.isPresent()||!publishedCourseOptional.isPresent()){
+            return new ArrayList<>();
+        }
+        Homework homework = homeworkOptional.get();
+        List<UpHomework> upHomework = homework.getUpHomework();
+        List<Score> shouldSaveScore=new ArrayList<>();
+        upHomework.forEach(uh->{
+            final String uper = uh.getUperUsername();
+            Integer score=homeworkScoreDTO.getScores().get(uper);
+            if(score==null){score=0;}
+            uh.setScore(score);
+            Score scoreEntity=new Score(publishedCourseOptional.get(),teacherOptional.get(),
+                            uh.getUper(),uh,homeworkOptional.get(),score);
+            shouldSaveScore.add(scoreEntity);
+        });
+        homework.setState(State.CANCELLED);
+        homework.setOpen(homeworkScoreDTO.getIsOpen());
+        homeworkDAO.save(homework);
+        scoreDAO.saveAll(shouldSaveScore);
+        upHomeworkDAO.saveAll(upHomework);
+        return upHomework;
+    }
+
+    public Integer email2All(EmailDTO emailDTO, Integer id, Integer publishId, String username) {
+        Optional<PublishedCourse> publishedCourseOptional = publishedCourseDAO.findById(publishId);
+        Optional<Teacher> teacherOptional = teacherDAO.findById(username);
+        if(!teacherOptional.isPresent()||!publishedCourseOptional.isPresent()){
+            throw new ExceptionNotValid("课程不存在");
+        }
+        final List<Student> students = publishedCourseOptional.get().getStudents();
+        int sandNum=0;
+        for(Student student:students){
+            emailService.send(student.getUsername(),emailDTO.getTitle(),emailDTO.getContent());
+            sandNum++;
+        }
+        return sandNum;
+    }
+
+    public Optional<PublishedCourse> checkCourse(Integer id, Integer publishId, String username) {
+        Optional<PublishedCourse> publishedCourseOptional = publishedCourseDAO.findById(publishId);
+        Optional<Student> studentOptional = studentDAO.findById(username);
+        if(!publishedCourseOptional.isPresent()||!studentOptional.isPresent()){
+            return Optional.empty();
+        }
+        PublishedCourse publishedCourse=publishedCourseOptional.get();
+        Student student=studentOptional.get();
+        Set<PublishedCourse> publishedCourseSet = student.getCourses();
+        //确定此人选了这门课
+        if(!publishedCourseSet.contains(publishedCourse)){//todo:
+            return Optional.empty();
+        }
+        return Optional.of(publishedCourse);
     }
 }

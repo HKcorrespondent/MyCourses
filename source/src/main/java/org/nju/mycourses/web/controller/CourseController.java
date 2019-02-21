@@ -6,10 +6,7 @@ import org.nju.mycourses.logic.CourseService;
 import org.nju.mycourses.logic.UserService;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
-import org.nju.mycourses.web.controller.dto.DocDTO;
-import org.nju.mycourses.web.controller.dto.HomeworkDTO;
-import org.nju.mycourses.web.controller.dto.PublishedCourseDTO;
-import org.nju.mycourses.web.controller.dto.UpHomeworkDTO;
+import org.nju.mycourses.web.controller.dto.*;
 import org.nju.mycourses.web.controller.vo.*;
 import org.nju.mycourses.web.security.impl.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,6 +193,35 @@ public class CourseController {
                 ).orElseThrow(() -> new ExceptionNotValid("要提交的作业不存在"))
         );
     }
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}/publish/{publishId}/email",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public Map email2All(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody EmailDTO emailDTO,
+                                   @PathVariable Integer id, @PathVariable Integer publishId,  Errors errors) throws ServiceException {
+        int sandNum=    courseService.email2All(
+                    emailDTO,
+                    id,publishId,
+                    userDetails.getUsername()
+            );
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("res","成功发送"+sandNum+"封邮件！");
+        return hashMap;
+    }
+
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}/publish/{publishId}/homework/{homeworkId}/score",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public Map homeworkScore(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody HomeworkScoreDTO homeworkScoreDTO,
+                                   @PathVariable Integer id, @PathVariable Integer publishId, @PathVariable Integer homeworkId, Errors errors) throws ServiceException {
+        Map<String,Object> upHomeworkVOListMap=new HashMap<>();
+        List<UpHomeworkVO> upHomeworkVOList;
+        upHomeworkVOList=courseService.homeworkScore(
+                homeworkScoreDTO,
+                id,publishId,homeworkId,
+                userDetails.getUsername()
+        ).stream().map(UpHomeworkVO::new).collect(Collectors.toList());
+        upHomeworkVOListMap.put("upHomework",upHomeworkVOList);
+        return upHomeworkVOListMap;
+    }
+
     @RolesAllowed({STUDENT_ROLE})
     @RequestMapping(value="/student/course/{id}/publish/{publishId}/select",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public PublishedCourseVO selectCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map body,
@@ -207,5 +233,26 @@ public class CourseController {
                 ).orElseThrow(() -> new ExceptionNotValid("课程人数已满"))
         );
     }
-
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/course/{id}/publish/{publishId}",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public PublishedCourseVO course(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map body,
+                                          @PathVariable Integer id, @PathVariable Integer publishId) throws ServiceException {
+        return new PublishedCourseVO(
+                courseService.checkCourse(
+                        id,publishId,
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("未选此课程，无法查看"))
+        );
+    }
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/course/{id}/publish/{publishId}/unselect",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public PublishedCourseVO unSelectCourse(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map body,
+                                          @PathVariable Integer id, @PathVariable Integer publishId,  Errors errors) throws ServiceException {
+        return new PublishedCourseVO(
+                courseService.unSelectCourse(
+                        id,publishId,
+                        userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("课程不存在或未选此课程"))
+        );
+    }
 }

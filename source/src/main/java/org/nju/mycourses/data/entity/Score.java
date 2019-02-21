@@ -1,6 +1,7 @@
 package org.nju.mycourses.data.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -14,17 +15,42 @@ import javax.persistence.*;
  **/
 @Entity
 @Data
+@NoArgsConstructor
 public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sid")
     private Integer id;
-    @ManyToOne
-    @JoinColumn(name="published_course_id")
-    private PublishedCourse publishedCourse;
-    @ManyToOne
-    @JoinColumn(name="student_id")
-    private Student student;
 
+    private String publishedCourseName;
+    private Integer publishedCourseId;
+    private String teacherName;
+    private String teacherUsername;
+    private String studentName;
+    private String studentUsername;
+    private String studentNumber;
+    @ManyToOne
+    @JoinColumn(name="hid")
+    private Homework homework;
+    @ManyToOne
+    @JoinColumn(name="username")
+    private Student student;
+    @OneToOne
+    @JoinColumn(name="uhid")
+    private UpHomework upHomework;
     private Integer score;
+
+    public Score(PublishedCourse publishedCourse,Teacher teacher,Student student,UpHomework upHomework,Homework homework,Integer score) {
+        this.publishedCourseName = publishedCourse.getLongName();
+        this.publishedCourseId = publishedCourse.getId();
+        this.teacherName = teacher.getName();
+        this.teacherUsername = teacher.getUsername();
+        this.studentName = student.getName();
+        this.studentUsername = student.getUsername();
+        this.studentNumber = student.getNumber();
+        this.homework = homework;
+        this.student = student;
+        this.upHomework = upHomework;
+        this.score = score;
+    }
 }
