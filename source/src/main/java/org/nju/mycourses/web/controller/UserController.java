@@ -117,7 +117,7 @@ public class UserController {
         m.put("data","all");
         return m;
     }
-    @RolesAllowed({STUDENT_ROLE})
+    @RolesAllowed({STUDENT_ROLE,UNCERTIFIED_STUDENT_ROLE})
     @RequestMapping(value="/student",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     public StudentVO student(@AuthenticationPrincipal CustomUserDetails userDetails)
     {
@@ -125,7 +125,7 @@ public class UserController {
                 .orElseThrow(() -> new ExceptionNotValid("用户不存在"))
         );
     }
-    @RolesAllowed({TEACHER_ROLE})
+    @RolesAllowed({TEACHER_ROLE,UNCERTIFIED_TEACHER_ROLE})
     @RequestMapping(value="/teacher",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     public TeacherVO teacher(@AuthenticationPrincipal CustomUserDetails userDetails)
     {

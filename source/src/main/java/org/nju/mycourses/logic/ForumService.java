@@ -75,7 +75,7 @@ public class ForumService {
         courseDAO.save(course);
         RemarkDTO remarkDTO=new RemarkDTO();
         remarkDTO.setContent(forumDTO.getContent());
-        return postRemark(remarkDTO,id,savedForum.getFid(),username);
+        return postRemark(remarkDTO,id,savedForum.getId(),username);
     }
     public Optional<Forum> postRemark(RemarkDTO remarkDTO, Integer id, Integer forumId, String username) {
         final Optional<User> userOptional = userDAO.findById(username);

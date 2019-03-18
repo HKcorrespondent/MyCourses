@@ -61,7 +61,8 @@ public class PublishedCourseVO {
 
     @JsonProperty("state")
     private State state;
-
+    @JsonProperty("className")
+    public String className="未知或者无意义";
     public PublishedCourseVO(PublishedCourse publishedCourse) {
         this.courseVO=new CourseVO(publishedCourse.getCourse());
         BeanUtils.copyProperties(publishedCourse, this);

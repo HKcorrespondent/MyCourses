@@ -84,11 +84,13 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .compact();
         assert username != null;
         assert userDAO != null;
-
+        Map<String,Object> ret=new HashMap<>();
         User user= userDAO.findByUsername(username);
         if(user==null){
             throw new NotFoundException("找不到用户");
         }
+        ret.put("user",user);
+        ret.put("authorization","Bearer " + token);
         res.setContentType("application/json; charset=utf-8");
         res.addHeader("Authorization", "Bearer " + token);
 //        TokenMap.getTokenMap().put(user.getUsername(),token);
@@ -96,7 +98,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         res.addHeader("State", user.getState().toString());
         try {
             PrintWriter writer = res.getWriter();
-            writer.print(new ObjectMapper().writeValueAsString(user));
+            writer.print(new ObjectMapper().writeValueAsString(ret));
             writer.close();
             res.flushBuffer();
         } catch (IOException e) {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName CourseService
@@ -179,6 +180,7 @@ public class CourseService {
         if(homeworkList==null){homeworkList=new ArrayList<>();}
         Homework homework=new Homework();
         homework.setState(State.INFORCE);
+        homework.setOpen(true);
         homework.setUpHomework(new ArrayList<>());
         BeanUtils.copyProperties(homeworkDTO,homework);
         final Homework savedHomework = homeworkDAO.save(homework);
@@ -244,12 +246,14 @@ public class CourseService {
         int listNum=(int) (Math.random() * couldAddClass.size());
         String className=couldAddClass.get(listNum);
         classMap.put(className,classMap.get(className)+1);
-
+        publishedCourse.getSt2ClassName().put(student.getUsername(),className);
         publishedCourse.setClassMap(classMap);
         publishedCourse.setStudentTotalNum(studentTotalNum);
         publishedCourse.setStudents(students);
-
+        Map<Integer, String> pcClass = student.getPCClass();
+        pcClass.put(publishedCourse.getId(),className);
         final PublishedCourse savedPublishedCourse = publishedCourseDAO.save(publishedCourse);
+        studentDAO.save(student);
         return Optional.of(savedPublishedCourse);
     }
     public Optional<PublishedCourse> unSelectCourse(Integer id, Integer publishId, String username) {
@@ -265,7 +269,7 @@ public class CourseService {
         if(!publishedCourseSet.contains(publishedCourse)){//todo:
             throw new ExceptionNotValid("未选该课程");
         }
-
+        String className=student.getPCClass().get(publishedCourse.getId());
         //分配班级，减少选课人数 todo:还要确定他在哪里班级
         Map<String, Integer> classMap = publishedCourse.getClassMap();
         Integer studentTotalNum = publishedCourse.getStudentTotalNum();
@@ -273,21 +277,19 @@ public class CourseService {
 
         students.remove(student);
         studentTotalNum=studentTotalNum-1;
-        List<String> couldAddClass=new ArrayList<>();
-        classMap.keySet().forEach(k->{
-            if(classMap.get(k)>0){
-                couldAddClass.add(k);
-            }
-        });
-        int listNum=(int) (Math.random() * couldAddClass.size());
-        String className=couldAddClass.get(listNum);
+
         classMap.put(className,classMap.get(className)-1);
 
+        Map<Integer, String> pcClass = student.getPCClass();
+        pcClass.remove(publishedCourse.getId());
+
+        publishedCourse.getSt2ClassName().remove(student.getUsername());
         publishedCourse.setClassMap(classMap);
         publishedCourse.setStudentTotalNum(studentTotalNum);
         publishedCourse.setStudents(students);
 
         final PublishedCourse savedPublishedCourse = publishedCourseDAO.save(publishedCourse);
+        studentDAO.save(student);
         return Optional.of(savedPublishedCourse);
     }
 
@@ -355,6 +357,16 @@ public class CourseService {
         if(!publishedCourseSet.contains(publishedCourse)){//todo:
             return Optional.empty();
         }
+        publishedCourse.setClassName(publishedCourse.getSt2ClassName().get(username));
         return Optional.of(publishedCourse);
+    }
+
+    public List<PublishedCourse> getStudentCourse(String username) {
+        Optional<Student> byId = studentDAO.findById(username);
+        if(!byId.isPresent()){
+            return new ArrayList<>();
+        }
+        Student student=byId.get();
+        return student.getCourses().stream().peek(e -> e.setClassName(e.getSt2ClassName().get(student.getUsername()))).collect(Collectors.toList());
     }
 }

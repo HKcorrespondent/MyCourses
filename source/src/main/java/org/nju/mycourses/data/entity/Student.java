@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -26,4 +28,6 @@ public class Student {
     @JoinTable(name="STUDENT_COURSE", joinColumns = @JoinColumn(name = "student", referencedColumnName = "username"),
             inverseJoinColumns = @JoinColumn(name = "publishedCourses", referencedColumnName = "pid"))
     private Set<PublishedCourse> courses = new HashSet<>();
+    @ElementCollection()
+    private Map<Integer,String> PCClass = new HashMap<>();
 }

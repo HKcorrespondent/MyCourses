@@ -43,6 +43,6 @@ public class Homework {
      */
     @ElementCollection()
     private List<UpHomework> upHomework;
-
+    @Column(nullable = true)
     private boolean isOpen=false;
 }

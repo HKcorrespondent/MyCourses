@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HomeworkVO {
-    @JsonProperty("forum_id")
+    @JsonProperty("id")
     private Integer id;
     @JsonProperty("name")
     private String name;

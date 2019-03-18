@@ -55,6 +55,9 @@ public class PublishedCourseDetailVO {
     @JsonProperty("course")
     public CourseVO courseVO;
 
+    @JsonProperty("className")
+    public String className="未知或者无意义";
+
     @JsonProperty("state")
     private State state;
     @JsonProperty("homework")
@@ -76,6 +79,7 @@ public class PublishedCourseDetailVO {
         this.description = publishedCourse.getDescription();
         this.longName = publishedCourse.getLongName();
         this.state = publishedCourse.getState();
+        this.className=publishedCourse.getClassName();
     }
 
 }

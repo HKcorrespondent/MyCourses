@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,9 @@ public class PublishedCourse {
     @ElementCollection()
     private Map<String,Integer> classMap;
 
+    @ElementCollection()
+    private Map<String,String> St2ClassName=new HashMap<>();
+
     @ManyToOne(targetEntity = Course.class)
     @JoinColumn(name = "cid")
     private Course course;
@@ -78,4 +82,6 @@ public class PublishedCourse {
 
     @ElementCollection()
     private List<Homework> Homework;
+
+    private String className;
 }

@@ -148,8 +148,8 @@ public class CourseController {
         return courseVOMap;
     }
     @RolesAllowed({STUDENT_ROLE})
-    @RequestMapping(value="/student/course",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-    public Map studentCourse(@AuthenticationPrincipal CustomUserDetails userDetails) throws ServiceException {
+    @RequestMapping(value="/student/couldSelectCourse",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public Map studentCouldSelectCourse(@AuthenticationPrincipal CustomUserDetails userDetails) throws ServiceException {
         Map<String,Object> publishedCourseVOMap =new HashMap<>();
         List<PublishedCourseVO> publishedCourseVOs;
         publishedCourseVOs=courseService.getCouldSelectCourse(userDetails.getUsername())
@@ -157,7 +157,16 @@ public class CourseController {
         publishedCourseVOMap.put("publishedCourses",publishedCourseVOs);
         return publishedCourseVOMap;
     }
-
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/student/course",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public Map studentCourse(@AuthenticationPrincipal CustomUserDetails userDetails) throws ServiceException {
+        Map<String,Object> publishedCourseVOMap =new HashMap<>();
+        List<PublishedCourseDetailVO> publishedCourseVOs;
+        publishedCourseVOs=courseService.getStudentCourse(userDetails.getUsername())
+                .stream().map(PublishedCourseDetailVO::new).collect(Collectors.toList());
+        publishedCourseVOMap.put("publishedCourses",publishedCourseVOs);
+        return publishedCourseVOMap;
+    }
     @RolesAllowed({TEACHER_ROLE})
     @RequestMapping(value="/teacher/course/{id}/publish/{publishId}/homework",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public HomeworkVO postHomework(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody HomeworkDTO homeworkDTO,

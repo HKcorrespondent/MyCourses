@@ -1,0 +1,53 @@
+<html lang="en-US">
+  <head>
+    <title>register</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link rel="stylesheet" type="text/css" href="css/login.css">
+    <link rel="stylesheet" href="css/login-m.css" media="all  and (max-width: 900px)" />
+    <link rel="stylesheet" href="css/login-m.css" media="all  and (max-device-width: 900px)" /> -->
+    <!-- <script type="text/javascript" src="script/tool/jquery.js"></script>
+    <script type="text/javascript" src="script/login.js"></script>
+    <script type="text/javascript" src="script/tool/md5.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+
+  <body>
+    <div id="app-5">
+      <p>{{ message }}</p>
+      <input v-model="username" type="username" />
+      <input v-model="password" type="password" />
+      <button v-on:click="reverseMessage">逆转消息</button>
+    </div>
+  </body>
+  <script>
+    var app5 = new Vue({
+      el: "#app-5",
+      data: {
+        message: "Hello Vue.js!",
+        username: "",
+        password: ""
+      },
+      methods: {
+        reverseMessage: function() {
+          let data = new Object();
+          data.username = this.username;
+          data.password = this.password;
+          fetch("http://localhost:4080/api/student/register", data, "POST")
+            .then(res => {
+              console.log(res);
+              return res.json();
+            })
+            .then(data => {
+              console.log("返回值：", data);
+            })
+            .catch(err => {
+              console.log(err);
+              this.message = err;
+            });
+        }
+      }
+    });
+  </script>
+</html>
