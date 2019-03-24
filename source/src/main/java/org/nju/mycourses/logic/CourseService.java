@@ -5,6 +5,8 @@ import org.nju.mycourses.data.entity.*;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
 import org.nju.mycourses.web.controller.dto.*;
+import org.nju.mycourses.web.controller.vo.CourseVO;
+import org.nju.mycourses.web.controller.vo.PublishedCourseVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,11 @@ public class CourseService {
     private final HomeworkDAO homeworkDAO;
     private final UpHomeworkDAO upHomeworkDAO;
     private final ScoreDAO scoreDAO;
+    private final LogDAO __LOGDAO__;
     @Autowired
     public CourseService(UserDAO userDAO, EmailService emailService, StudentDAO studentDAO,
                          TeacherDAO teacherDAO, CourseDAO courseDAO, DocumentDAO documentDAO,
-                         PublishedCourseDAO publishedCourseDAO, HomeworkDAO homeworkDAO, UpHomeworkDAO upHomeworkDAO, ScoreDAO scoreDAO) {
+                         PublishedCourseDAO publishedCourseDAO, HomeworkDAO homeworkDAO, UpHomeworkDAO upHomeworkDAO, ScoreDAO scoreDAO, LogDAO logDAO) {
         this.userDAO = userDAO;
         this.emailService = emailService;
         this.studentDAO = studentDAO;
@@ -47,6 +50,7 @@ public class CourseService {
         this.homeworkDAO = homeworkDAO;
         this.upHomeworkDAO = upHomeworkDAO;
         this.scoreDAO = scoreDAO;
+        this.__LOGDAO__ = logDAO;
     }
 
     public Optional<Course> createCourse(String name, String username) {
@@ -61,6 +65,7 @@ public class CourseService {
         course.setForums(new ArrayList<>());
         course.setState(State.UNCERTIFIED);
         final Course saved = courseDAO.save(course);
+        __LOGDAO__.save(new Log("创建课程",saved.getId()+":"+saved.getName(),username,Role.TEACHER));
         return Optional.of(saved);
     }
 
@@ -72,6 +77,7 @@ public class CourseService {
             Course course =byId.get();
             course.setState(State.INFORCE);
             final Course saved = courseDAO.save(course);
+            __LOGDAO__.save(new Log("通过课程",saved.getId()+":"+saved.getName(),username,Role.ADMIN));
             return Optional.of(saved);
         }
 
@@ -95,6 +101,8 @@ public class CourseService {
             }
             course.setDocs(docs);
             final Course saved = courseDAO.save(course);
+
+            __LOGDAO__.save(new Log("上传课件",saved.getId()+":"+saved.getName()+":数量-"+addDocs.size(),username,Role.TEACHER));
             return Optional.of(saved);
         }
     }
@@ -117,6 +125,7 @@ public class CourseService {
         }
         publishedCourse.setClassMap(classMap);
         final PublishedCourse saved = publishedCourseDAO.save(publishedCourse);
+        __LOGDAO__.save(new Log("发布课程",saved.getId()+":"+saved.getLongName(),username,Role.TEACHER));
         return Optional.of(saved);
     }
 
@@ -128,6 +137,8 @@ public class CourseService {
             PublishedCourse publishedCourse =byId.get();
             publishedCourse.setState(State.INFORCE);
             final PublishedCourse saved = publishedCourseDAO.save(publishedCourse);
+
+            __LOGDAO__.save(new Log("通过发布课程",saved.getId()+":"+saved.getLongName(),username,Role.ADMIN));
             return Optional.of(saved);
         }
     }
@@ -151,13 +162,18 @@ public class CourseService {
         }
         Student student=byId.get();
         Set<PublishedCourse> courses = student.getCourses();
-        List<PublishedCourse> all = publishedCourseDAO.findAll();
+        List<PublishedCourse> all = publishedCourseDAO.findAllByState(State.INFORCE);
         all.removeAll(courses);
         LocalDateTime now=LocalDateTime.now();
-
-        all.removeIf(c->now.isBefore(c.getSelectStart())&&now.isAfter(c.getSelectEnd()));
-        all.removeIf(c->c.getStudentTotalNum()>=c.getClassNumLimit()*c.getStudentEachClassLimit());
-        return all;
+        List<PublishedCourse> ret=new ArrayList<>();
+        for(PublishedCourse c:all){
+            if(now.isAfter(c.getSelectStart())&&now.isBefore(c.getSelectEnd())){
+                if(c.getStudentTotalNum()<c.getClassNumLimit()*c.getStudentEachClassLimit()){
+                    ret.add(c);
+                }
+            }
+        }
+        return ret;
 
     }
 
@@ -187,6 +203,8 @@ public class CourseService {
         homeworkList.add(savedHomework);
         publishedCourse.setHomework(homeworkList);
         publishedCourseDAO.save(publishedCourse);
+
+        __LOGDAO__.save(new Log("布置作业",publishedCourse.getId()+":"+publishedCourse.getLongName()+":"+homeworkDTO.getName(),username,Role.TEACHER));
         return Optional.of(savedHomework);
     }
 
@@ -210,6 +228,8 @@ public class CourseService {
         upHomeworkList.add(savedHomework);
         homework.setUpHomework(upHomeworkList);
         homeworkDAO.save(homework);
+        __LOGDAO__.save(new Log("上交作业",publishId+":作业ID-"+homeworkId,username,Role.STUDENT));
+
         return Optional.of(savedHomework);
     }
 
@@ -254,6 +274,8 @@ public class CourseService {
         pcClass.put(publishedCourse.getId(),className);
         final PublishedCourse savedPublishedCourse = publishedCourseDAO.save(publishedCourse);
         studentDAO.save(student);
+
+        __LOGDAO__.save(new Log("选课",publishId+":班级-"+className,username,Role.STUDENT));
         return Optional.of(savedPublishedCourse);
     }
     public Optional<PublishedCourse> unSelectCourse(Integer id, Integer publishId, String username) {
@@ -290,6 +312,7 @@ public class CourseService {
 
         final PublishedCourse savedPublishedCourse = publishedCourseDAO.save(publishedCourse);
         studentDAO.save(student);
+        __LOGDAO__.save(new Log("退课",publishId+":班级-"+className,username,Role.STUDENT));
         return Optional.of(savedPublishedCourse);
     }
 
@@ -313,12 +336,15 @@ public class CourseService {
         List<UpHomework> upHomework = homework.getUpHomework();
         List<Score> shouldSaveScore=new ArrayList<>();
         upHomework.forEach(uh->{
-            final String uper = uh.getUperUsername();
+            final String un=uh.getUperUsername();
+            final String uper = un.substring(0,un.indexOf("@"));
             Integer score=homeworkScoreDTO.getScores().get(uper);
+            __LOGDAO__.save(new Log("作业评分",publishId+":作业号-"+homeworkId+":分数"+score,un,Role.STUDENT));
             if(score==null){score=0;}
             uh.setScore(score);
             Score scoreEntity=new Score(publishedCourseOptional.get(),teacherOptional.get(),
                             uh.getUper(),uh,homeworkOptional.get(),score);
+            scoreEntity.setStudentNumber(uper);
             shouldSaveScore.add(scoreEntity);
         });
         homework.setState(State.CANCELLED);
@@ -326,9 +352,22 @@ public class CourseService {
         homeworkDAO.save(homework);
         scoreDAO.saveAll(shouldSaveScore);
         upHomeworkDAO.saveAll(upHomework);
+        __LOGDAO__.save(new Log("上传作业评分",publishId+":作业号-"+homeworkId+":份数"+homeworkScoreDTO.getScores().size(),username,Role.TEACHER));
         return upHomework;
     }
 
+    public void examScore(HomeworkScoreDTO examDTO, Integer cid, Integer publishId, String username) {
+        Optional<PublishedCourse> publishedCourseOptional = publishedCourseDAO.findById(publishId);
+        if(!publishedCourseOptional.isPresent()){
+            return ;
+        }
+        final PublishedCourse publishedCourse = publishedCourseOptional.get();
+        publishedCourse.setExamOpen(examDTO.getIsOpen().toString());
+        publishedCourse.setExamScore(examDTO.getScores());
+        __LOGDAO__.save(new Log("上传考试评分",publishId+":份数"+examDTO.getScores().size(),username,Role.TEACHER));
+
+        publishedCourseDAO.save(publishedCourse);
+    }
     public Integer email2All(EmailDTO emailDTO, Integer id, Integer publishId, String username) {
         Optional<PublishedCourse> publishedCourseOptional = publishedCourseDAO.findById(publishId);
         Optional<Teacher> teacherOptional = teacherDAO.findById(username);
@@ -341,6 +380,7 @@ public class CourseService {
             emailService.send(student.getUsername(),emailDTO.getTitle(),emailDTO.getContent());
             sandNum++;
         }
+        __LOGDAO__.save(new Log("群发邮件",publishId+":标题"+emailDTO.getTitle(),username,Role.TEACHER));
         return sandNum;
     }
 
@@ -368,5 +408,14 @@ public class CourseService {
         }
         Student student=byId.get();
         return student.getCourses().stream().peek(e -> e.setClassName(e.getSt2ClassName().get(student.getUsername()))).collect(Collectors.toList());
+    }
+
+    public Map adminGetCourse() {
+        HashMap<String,Object> ret=new HashMap<>();
+        final List<PublishedCourseVO> pcs = publishedCourseDAO.findAllByState(State.UNCERTIFIED).stream().map(PublishedCourseVO::new).collect(Collectors.toList());
+        final List<CourseVO> cs = courseDAO.findAllByState(State.UNCERTIFIED).stream().map(CourseVO::new).collect(Collectors.toList());
+        ret.put("cs",cs);
+        ret.put("pcs",pcs);
+        return ret;
     }
 }

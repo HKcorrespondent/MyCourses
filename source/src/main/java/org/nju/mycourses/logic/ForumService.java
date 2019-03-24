@@ -1,10 +1,7 @@
 package org.nju.mycourses.logic;
 
 import org.nju.mycourses.data.*;
-import org.nju.mycourses.data.entity.Course;
-import org.nju.mycourses.data.entity.Forum;
-import org.nju.mycourses.data.entity.Remark;
-import org.nju.mycourses.data.entity.User;
+import org.nju.mycourses.data.entity.*;
 import org.nju.mycourses.logic.util.EmailService;
 import org.nju.mycourses.web.controller.dto.ForumDTO;
 import org.nju.mycourses.web.controller.dto.RemarkDTO;
@@ -38,11 +35,12 @@ public class ForumService {
     private final UpHomeworkDAO upHomeworkDAO;
     private final ForumDAO forumDAO;
     private final RemarkDAO remarkDAO;
+    private final LogDAO __LOGDAO__;
     @Autowired
     public ForumService(UserDAO userDAO, EmailService emailService, StudentDAO studentDAO,
                         TeacherDAO teacherDAO, CourseDAO courseDAO, DocumentDAO documentDAO,
                         PublishedCourseDAO publishedCourseDAO, HomeworkDAO homeworkDAO,
-                        UpHomeworkDAO upHomeworkDAO, ForumDAO forumDAO, RemarkDAO remarkDAO) {
+                        UpHomeworkDAO upHomeworkDAO, ForumDAO forumDAO, RemarkDAO remarkDAO, LogDAO logdao__) {
         this.userDAO = userDAO;
         this.emailService = emailService;
         this.studentDAO = studentDAO;
@@ -54,6 +52,7 @@ public class ForumService {
         this.upHomeworkDAO = upHomeworkDAO;
         this.forumDAO = forumDAO;
         this.remarkDAO = remarkDAO;
+        __LOGDAO__ = logdao__;
     }
 
     public Optional<Forum> postForum(ForumDTO forumDTO, Integer id, String username) {
@@ -75,6 +74,7 @@ public class ForumService {
         courseDAO.save(course);
         RemarkDTO remarkDTO=new RemarkDTO();
         remarkDTO.setContent(forumDTO.getContent());
+        __LOGDAO__.save(new Log("论坛发帖",id+":标题"+forumDTO.getName(),user));
         return postRemark(remarkDTO,id,savedForum.getId(),username);
     }
     public Optional<Forum> postRemark(RemarkDTO remarkDTO, Integer id, Integer forumId, String username) {
@@ -99,6 +99,7 @@ public class ForumService {
         remarks.add(savedRemark);
         forum.setRemarks(remarks);
         forum.setNumber(num);
+        __LOGDAO__.save(new Log("论坛回帖",id+":帖子id"+forumId,user));
         return Optional.of(forumDAO.save(forum));
     }
 

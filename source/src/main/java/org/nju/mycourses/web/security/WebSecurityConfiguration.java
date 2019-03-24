@@ -1,5 +1,6 @@
 package org.nju.mycourses.web.security;
 
+import org.nju.mycourses.data.LogDAO;
 import org.nju.mycourses.data.UserDAO;
 import org.nju.mycourses.web.security.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class WebSecurityConfiguration {
 //		private final LoginRedirectHandler loginRedirectHandler;
 		@Autowired
 		private UserDAO userDAO;
-
+		@Autowired
+		private LogDAO logDAO;
 		@Autowired
 		public DefaultWebSecurityConfiguration(UserDetailsServiceImpl userDetailsService) {
 			this.userDetailsService = userDetailsService;
@@ -49,6 +51,7 @@ public class WebSecurityConfiguration {
 		protected void configure(HttpSecurity http) throws Exception {
 			JwtLoginFilter loginFilter = new JwtLoginFilter(authenticationManager());
         	loginFilter.setUserDAO(userDAO);
+			loginFilter.setLogDAO(logDAO);
         	loginFilter.setAuthenticationFailureHandler(
                 new AuthFailHandler());
         	loginFilter.setRequiresAuthenticationRequestMatcher(

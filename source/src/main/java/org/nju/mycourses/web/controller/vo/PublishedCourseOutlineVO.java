@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,6 +46,9 @@ public class PublishedCourseOutlineVO {
     private String description;
     private String longName;
     private State state;
+    private Map<String,Integer> examScore=new HashMap<>();
+
+    private String examOpen="true";
     public PublishedCourseOutlineVO(PublishedCourse publishedCourse) {
         BeanUtils.copyProperties(publishedCourse, this);
     }

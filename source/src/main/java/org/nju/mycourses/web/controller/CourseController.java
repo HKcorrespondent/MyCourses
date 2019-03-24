@@ -75,6 +75,12 @@ public class CourseController {
 
     }
 
+    @RolesAllowed({ADMIN_ROLE})
+    @RequestMapping(value="/course/admin",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public Map getCourse(@AuthenticationPrincipal CustomUserDetails userDetails ) throws ServiceException {
+        return courseService.adminGetCourse();
+
+    }
 
     @RolesAllowed({TEACHER_ROLE})
     @RequestMapping(value="/teacher/course/{id}/doc",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
@@ -229,6 +235,19 @@ public class CourseController {
         ).stream().map(UpHomeworkVO::new).collect(Collectors.toList());
         upHomeworkVOListMap.put("upHomework",upHomeworkVOList);
         return upHomeworkVOListMap;
+    }
+
+    @RolesAllowed({TEACHER_ROLE})
+    @RequestMapping(value="/teacher/course/{id}/publish/{publishId}/exam",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public Object examScore(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody HomeworkScoreDTO examDTO,
+                             @PathVariable Integer id, @PathVariable Integer publishId, Errors errors) throws ServiceException {
+        Map<String,Object> upHomeworkVOListMap=new HashMap<>();
+        courseService.examScore(
+                examDTO,
+                id,publishId,
+                userDetails.getUsername()
+        );
+        return examDTO;
     }
 
     @RolesAllowed({STUDENT_ROLE})

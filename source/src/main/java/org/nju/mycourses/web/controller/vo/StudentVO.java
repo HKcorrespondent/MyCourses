@@ -21,6 +21,12 @@ public class StudentVO extends UserVO {
     @JsonProperty("number")
     private String number;
 
+    @JsonProperty("score")
+    private String examScore="0";
+
+    @JsonProperty("class")
+    private String className="未知";
+
     public StudentVO(Student student) {
         super(student.getUser());
         this.name = student.getName();

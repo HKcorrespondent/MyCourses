@@ -5,9 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.nju.mycourses.data.LogDAO;
+import org.nju.mycourses.data.entity.Log;
+import org.nju.mycourses.data.entity.Role;
+import org.nju.mycourses.data.entity.State;
 import org.nju.mycourses.data.entity.User;
 import org.nju.mycourses.data.UserDAO;
 import org.nju.mycourses.logic.exception.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +44,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager=null;
     private UserDAO userDAO;
 
+    private LogDAO __LOGDAO__;
     public JwtLoginFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
@@ -46,6 +52,9 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+    public void setLogDAO(LogDAO logDAO) {
+        this.__LOGDAO__ = logDAO;
     }
 
     @Override
@@ -89,6 +98,9 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         if(user==null){
             throw new NotFoundException("找不到用户");
         }
+        if(user.getState().equals(State.CANCELLED)){
+            throw new MyAuthenticationException("用户已经注销！");
+        }
         ret.put("user",user);
         ret.put("authorization","Bearer " + token);
         res.setContentType("application/json; charset=utf-8");
@@ -96,6 +108,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 //        TokenMap.getTokenMap().put(user.getUsername(),token);
         res.addHeader("Role", user.getRole().toString());
         res.addHeader("State", user.getState().toString());
+        __LOGDAO__.save(new Log("登录","",user));
         try {
             PrintWriter writer = res.getWriter();
             writer.print(new ObjectMapper().writeValueAsString(ret));

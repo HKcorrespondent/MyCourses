@@ -6,9 +6,7 @@ import org.nju.mycourses.logic.UserService;
 import org.nju.mycourses.logic.exception.ExceptionNotValid;
 import org.nju.mycourses.logic.util.EmailService;
 import org.nju.mycourses.web.controller.dto.UserDTO;
-import org.nju.mycourses.web.controller.vo.StudentVO;
-import org.nju.mycourses.web.controller.vo.TeacherVO;
-import org.nju.mycourses.web.controller.vo.UserVO;
+import org.nju.mycourses.web.controller.vo.*;
 import org.nju.mycourses.web.security.impl.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.websocket.server.PathParam;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.nju.mycourses.web.security.WebSecurityConstants.*;
 @RestController
@@ -83,7 +83,25 @@ public class UserController {
         );
 
     }
+    @RolesAllowed({STUDENT_ROLE})
+    @RequestMapping(value="/user/cancel",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public UserVO cancelUser(@AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+        return new UserVO(
+                userService.cancel(userDetails.getUsername()
+                ).orElseThrow(() -> new ExceptionNotValid("验证码错误"))
+        );
+    }
 
+    @RolesAllowed({})
+    @RequestMapping(value="/user/log",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public List<LogVO> cancelUser(@AuthenticationPrincipal CustomUserDetails userDetails,@RequestParam String username)
+    {
+        return userService.checkLog(username)
+                .stream()
+                .map(LogVO::new)
+                .collect(Collectors.toList());
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -125,7 +143,7 @@ public class UserController {
                 .orElseThrow(() -> new ExceptionNotValid("用户不存在"))
         );
     }
-    @RolesAllowed({TEACHER_ROLE,UNCERTIFIED_TEACHER_ROLE})
+    @RolesAllowed({TEACHER_ROLE,UNCERTIFIED_TEACHER_ROLE,ADMIN_ROLE})
     @RequestMapping(value="/teacher",method = RequestMethod.GET,produces = "application/json; charset=utf-8")
     public TeacherVO teacher(@AuthenticationPrincipal CustomUserDetails userDetails)
     {

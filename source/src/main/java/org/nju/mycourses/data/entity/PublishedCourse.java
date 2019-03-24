@@ -68,6 +68,11 @@ public class PublishedCourse {
     @ElementCollection()
     private Map<String,String> St2ClassName=new HashMap<>();
 
+    @ElementCollection()
+    private Map<String,Integer> examScore=new HashMap<>();
+
+    private String examOpen="true";
+
     @ManyToOne(targetEntity = Course.class)
     @JoinColumn(name = "cid")
     private Course course;

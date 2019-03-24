@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName PublishedCourseDTO
@@ -63,6 +65,9 @@ public class PublishedCourseVO {
     private State state;
     @JsonProperty("className")
     public String className="未知或者无意义";
+    private Map<String,Integer> examScore=new HashMap<>();
+
+    private String examOpen="true";
     public PublishedCourseVO(PublishedCourse publishedCourse) {
         this.courseVO=new CourseVO(publishedCourse.getCourse());
         BeanUtils.copyProperties(publishedCourse, this);

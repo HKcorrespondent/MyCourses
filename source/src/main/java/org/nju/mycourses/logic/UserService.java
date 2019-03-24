@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,20 +19,29 @@ public class UserService {
     private final StudentDAO studentDAO;
     private final TeacherDAO teacherDAO;
     private final EmailService emailService;
+    private final LogDAO __LOGDAO__;
     @Autowired
-    public UserService(UserDAO userDAO, EmailService emailService, StudentDAO studentDAO, TeacherDAO teacherDAO) {
+    public UserService(UserDAO userDAO, EmailService emailService, StudentDAO studentDAO, TeacherDAO teacherDAO, LogDAO logdao__) {
         this.userDAO = userDAO;
         this.emailService = emailService;
         this.studentDAO = studentDAO;
         this.teacherDAO = teacherDAO;
+        __LOGDAO__ = logdao__;
     }
     @Transactional
     public Optional<User> Register(String email, String password, Role role){
         //todo:检查状态
-        if(userDAO.findById(email).isPresent()){
-            return Optional.empty();
-        }
         User newUser=new User();
+        final Optional<User> byId = userDAO.findById(email);
+        if(byId.isPresent()){
+            if(!byId.get().getState().equals(State.CANCELLED)){
+                return Optional.empty();
+            }
+            else{
+                newUser=byId.get();
+            }
+        }
+
         newUser.setUsername(email);
         newUser.setPassword(DigestUtils.sha256Hex(password));
         newUser.setRole(role);
@@ -50,6 +61,8 @@ public class UserService {
             teacher.setUser(user);
             teacherDAO.save(teacher);
         }
+
+        __LOGDAO__.save(new Log("注册",user.getUsername()+":"+user.getCERTIFIED_CODE(),user));
         return Optional.of(user);
     }
     public Optional<User> registerAdmin(String username, String password) {
@@ -71,6 +84,7 @@ public class UserService {
             User rUser=user.get();
             if(rUser.getCERTIFIED_CODE().equals(code)){
                 rUser.setState(State.INFORCE);
+                __LOGDAO__.save(new Log("验证邮箱",rUser.getUsername()+":"+rUser.getCERTIFIED_CODE(),rUser));
                 return Optional.of(userDAO.save(rUser));
             }else{
                 return Optional.empty();
@@ -89,6 +103,8 @@ public class UserService {
             student.setName(name);
             student.setNumber(number);
             final Student saved = studentDAO.save(student);
+
+            __LOGDAO__.save(new Log("修改用户信息",student.getUser().getUsername(),student.getUser()));
             return Optional.of(saved);
         }
 
@@ -102,6 +118,7 @@ public class UserService {
             Teacher teacher=byId.get();
             teacher.setName(name);
             final Teacher saved = teacherDAO.save(teacher);
+            __LOGDAO__.save(new Log("修改用户信息",teacher.getUser().getUsername(),teacher.getUser()));
             return Optional.of(saved);
         }
     }
@@ -111,8 +128,37 @@ public class UserService {
     }
 
     public Optional<Teacher> getTeacher(String username) {
+        final Optional<User> user = userDAO.findById(username);
+        if(user.isPresent()){
+            if(user.get().getRole().equals(Role.ADMIN)){
+                Teacher admin=new Teacher();
+                admin.setUser(user.get());
+                admin.setName("admin");
+                admin.setUsername(user.get().getUsername());
+                return Optional.of(admin);
+            }
+        }
         return teacherDAO.findById(username);
     }
 
+    public Optional<User> cancel(String username) {
+        final Optional<User> user = userDAO.findById(username);
+        if(user.isPresent()){
+            User rUser=user.get();
+            rUser.setState(State.CANCELLED);
+            __LOGDAO__.save(new Log("注销",rUser.getUsername(),rUser));
+                return Optional.of(userDAO.save(rUser));
+        }else{
+                return Optional.empty();
+        }
+    }
+
+    public List<Log> checkLog(String username) {
+        if(username.equals("admin")){
+            return __LOGDAO__.findAll();
+        }else{
+            return __LOGDAO__.findAllByUsername(username);
+        }
+    }
 
 }

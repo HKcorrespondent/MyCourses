@@ -1,6 +1,7 @@
 package org.nju.mycourses.data;
 
 import org.nju.mycourses.data.entity.Course;
+import org.nju.mycourses.data.entity.State;
 import org.nju.mycourses.data.entity.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +19,5 @@ import java.util.Optional;
 public interface CourseDAO extends JpaRepository<Course,Integer> {
     Optional<Course> findByName(String name);
     List<Course> findAllByTeacher(Teacher teacher);
+    List<Course> findAllByState(State state);
 }

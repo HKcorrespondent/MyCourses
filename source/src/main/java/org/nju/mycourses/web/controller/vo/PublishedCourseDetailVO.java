@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.nju.mycourses.data.entity.PublishedCourse;
 import org.nju.mycourses.data.entity.State;
+import org.nju.mycourses.data.entity.Student;
 import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +60,9 @@ public class PublishedCourseDetailVO {
 
     @JsonProperty("className")
     public String className="未知或者无意义";
+    private Map<String,Integer> examScore=new HashMap<>();
 
+    private String examOpen="true";
     @JsonProperty("state")
     private State state;
     @JsonProperty("homework")
@@ -67,7 +72,18 @@ public class PublishedCourseDetailVO {
     public PublishedCourseDetailVO(PublishedCourse publishedCourse) {
         this.courseVO = new CourseVO(publishedCourse.getCourse());
         this.homework = publishedCourse.getHomework().stream().map(HomeworkVO::new).collect(Collectors.toList());
-        this.students = publishedCourse.getStudents().stream().map(StudentVO::new).collect(Collectors.toList());
+        this.students = publishedCourse.getStudents().stream().map(e->{
+            StudentVO student=new StudentVO(e);
+            final String un=student.getUsername();
+            final String uper = un.substring(0,un.indexOf("@"));
+            if(publishedCourse.getExamScore()!=null&&publishedCourse.getExamScore().get(uper)!=null){
+                student.setExamScore(publishedCourse.getExamScore().get(uper).toString());
+            }
+            if(publishedCourse.getSt2ClassName()!=null&&publishedCourse.getSt2ClassName().get(un)!=null){
+                student.setClassName(publishedCourse.getSt2ClassName().get(un));
+            }
+            return student;
+        }).collect(Collectors.toList());
         this.id = publishedCourse.getId();
         this.startAt = publishedCourse.getStartAt();
         this.endAt = publishedCourse.getEndAt();
@@ -80,6 +96,8 @@ public class PublishedCourseDetailVO {
         this.longName = publishedCourse.getLongName();
         this.state = publishedCourse.getState();
         this.className=publishedCourse.getClassName();
+        this.examScore=publishedCourse.getExamScore();
+        this.examOpen=publishedCourse.getExamOpen();
     }
 
 }
